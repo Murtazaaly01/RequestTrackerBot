@@ -3,7 +3,6 @@ services:
   worker:
     build: .
     environment:
-      SESSION_NAME: $SESSION_NAME
       API_ID: $API_ID
       API_HASH: $API_HASH
       MONGODB_URL: $MONGODB_URL
