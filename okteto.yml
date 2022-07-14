@@ -1,19 +1,10 @@
-build:
-  api:
-    context: api
-  frontend:
-    context: frontend
-deploy:
-  - helm upgrade --install movies chart --set api.image=${OKTETO_BUILD_API_IMAGE} --set frontend.image=${OKTETO_BUILD_FRONTEND_IMAGE}
-dev:
-  api:
-    command: ["bash"]
-    forward:
-      - 8080:8080
-      - 9229:9229
-    sync:
-      - api:/usr/src/app
-  frontend:
-    command: yarn start
-    sync:
-      - frontend:/usr/src/app
+version: "3.10"
+services:
+  worker:
+    build: .
+    environment:
+      SESSION_NAME: $SESSION_NAME
+      API_ID: $API_ID
+      API_HASH: $API_HASH
+      MONGODB_URL: $MONGODB_URL
+      BOT_TOKEN : $BOT_TOKEN
