@@ -49,7 +49,7 @@ collection_ID = db_bot['channelGroupID']
 
 
 # Regular Expression for #request
-requestRegex = "#[dD][rR][aA][mA][rR][aA][eE][qQ][uU][eE][sS][tT]"
+requestRegex = "#[dD][rR][aA][mA][aA][rR][eE][qQ][uU][eE][sS][tT]"
 
 
 """Handlers"""
