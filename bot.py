@@ -49,7 +49,7 @@ collection_ID = db_bot['channelGroupID']
 
 
 # Regular Expression for #request
-requestRegex = "#[rR][eE][qQ][uU][eE][sS][tT] "
+requestRegex = "#[dD][rR][aA][mA][rR][eE][qQ][uU][eE][sS][tT]"
 
 
 """Handlers"""
@@ -59,14 +59,14 @@ requestRegex = "#[rR][eE][qQ][uU][eE][sS][tT] "
 async def startHandler(bot:Update, msg:Message):
     botInfo = await bot.get_me()
     await msg.reply_text(
-        "<b>Hi,this is SiC Request Bot 🤖.\n\nThe requests can be registered by typing ( #request ) in Dump group.\nMovies will be uploaded in UPLOADS CHANNEL only.\nRest of the things will be handled by Admins itself.\n\nMaintainer: Chaitanya Gupta (Team SiC)</b>",
+        "<b>Hi,this is  Request Bot 🤖.\n\nThe requests can be registered by typing ( #request ) in Dump group.\nMovies will be uploaded in UPLOADS CHANNEL only.\nRest of the things will be handled by Admins itself.\n\nMaintainer:<a href='t.me/SamSepl0L'> ! ᑌᑎᑌᔕᑌᗩᒪ</a></b>",
         parse_mode = "html",
         reply_markup = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
                         "📤UPLOADS CHANNEL📤",
-                        url = f"https://t.me/+B_q7PnIdPJk5ZmY1"
+                        url = f"https://t.me/+g5x2EHT6WVMxYjRk"
                     )
                     
                 ]
@@ -401,7 +401,7 @@ async def callBackButton(bot:Update, callback_query:CallbackQuery):
                                     [
                                         InlineKeyboardButton(
                                             "📤UPLOAD CHANNEL📤",
-                                            url = f"https://t.me/+B_q7PnIdPJk5ZmY1"
+                                            url = f"https://t.me/+g5x2EHT6WVMxYjRk"
                                         )
                                     ]
                                 ]
