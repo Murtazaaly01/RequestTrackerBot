@@ -60,19 +60,19 @@ async def startHandler(bot:Update, msg:Message):
     botInfo = await bot.get_me()
     await msg.reply_text(
         "<b>Hi,this is  Request Bot 🤖.\n\nThe requests can be registered by typing ( #request ) in Dump group.\nMovies will be uploaded in UPLOADS CHANNEL only.\nRest of the things will be handled by Admins itself.\n\nMaintainer:<a href='t.me/SamSepl0L'> ! ᑌᑎᑌᔕᑌᗩᒪ</a></b>",
-        parse_mode = "html",
-        reply_markup = InlineKeyboardMarkup(
+        parse_mode="html",
+        reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
                         "📤UPLOADS CHANNEL📤",
-                        url = f"https://t.me/+g5x2EHT6WVMxYjRk"
+                        url="https://t.me/+g5x2EHT6WVMxYjRk",
                     )
-                    
                 ]
             ]
-        )
+        ),
     )
+
     return
 
 # return group id when bot is added to group
@@ -124,15 +124,12 @@ async def groupChannelIDHandler(bot:Update, msg:Message):
                     )
                     break
                 for record in document:
-                    if record == "_id":
-                        continue
-                    else:
-                        if document[record][0] == channelID:    #If channel id found in database
-                            await msg.reply_text(
-                                "<b>Your Channel ID already Added.</b>",
-                                parse_mode = "html"
-                            )
-                            break
+                    if record != "_id" and document[record][0] == channelID:
+                        await msg.reply_text(
+                            "<b>Your Channel ID already Added.</b>",
+                            parse_mode = "html"
+                        )
+                        break
             else:   # If group id & channel not found in db
                 try:
                     botSelfGroup = await bot.get_chat_member(int(groupID), 'me')
@@ -234,7 +231,7 @@ async def channelgroupRemover(bot:Update, msg:Message):
     return
 
 # #request handler
-@app.on_message(filters.group & filters.regex(requestRegex + "(.*)"))
+@app.on_message(filters.group & filters.regex(f"{requestRegex}(.*)"))
 async def requestHandler(bot:Update, msg:Message):
     groupID = str(msg.chat.id)
 
@@ -253,7 +250,7 @@ async def requestHandler(bot:Update, msg:Message):
             findRegexStr = match(requestRegex, originalMSG)
             requestString = findRegexStr.group()
             contentRequested = originalMSG.split(requestString)[1]
-            
+
             try:
                 groupIDPro = groupID.removeprefix(str(-100))
                 channelIDPro = channelID.removeprefix(str(-100))
@@ -322,92 +319,88 @@ async def callBackButton(bot:Update, callback_query:CallbackQuery):
     documents = collection_ID.find()
     for document in documents:
         for key in document:
-            if key == "_id":
-                continue
-            else:
-                if document[key][0] != channelID:
-                    continue
-                else:   # If channel id found in database
-                    groupID = key
+            if key != "_id" and document[key][0] == channelID:
+                groupID = key
 
-                    data = callback_query.data  # Callback Data
-                    if data == "rejected":
-                        return await callback_query.answer(
-                            "This request is rejected💔...\nSearch in channel and request again",
-                            show_alert = True
-                        )
-                    elif data == "completed":
-                        return await callback_query.answer(
-                            "This request Is Completed🥳...\nCheckout in Channel😊",
-                            show_alert = True
-                        )
-                    user = await bot.get_chat_member(int(channelID), callback_query.from_user.id)
-                    if user.status not in ("administrator", "creator"): # If accepting, rejecting request tried to be done by neither admin nor owner
-                        await callback_query.answer(
-                            "Wait.....??\nYour are not Admin😒.",
-                            show_alert = True
-                        )
-                    else:   # If accepting, rejecting request tried to be done by either admin or owner
-                        if data == "reject":
-                            result = "REJECTED"
-                            groupResult = "has been Rejected💔."
-                            button = InlineKeyboardButton("Request Rejected🚫", "request again")
-                        elif data == "done":
-                            result = "COMPLETED"
-                            groupResult = "is Completed🥳."
-                            button = InlineKeyboardButton("Request Completed✅", "completed")
-                        elif data == "unavailable":
-                            result = "UNAVAILABLE"
-                            groupResult = "has been rejected💔 due to Unavailablity🥲."
-                            button = InlineKeyboardButton("Request Rejected🚫", "request again")
+                data = callback_query.data  # Callback Data
+                if data == "rejected":
+                    return await callback_query.answer(
+                        "This request is rejected💔...\nSearch in channel and request again",
+                        show_alert = True
+                    )
+                elif data == "completed":
+                    return await callback_query.answer(
+                        "This request Is Completed🥳...\nCheckout in Channel😊",
+                        show_alert = True
+                    )
+                user = await bot.get_chat_member(int(channelID), callback_query.from_user.id)
+                if user.status not in ("administrator", "creator"): # If accepting, rejecting request tried to be done by neither admin nor owner
+                    await callback_query.answer(
+                        "Wait.....??\nYour are not Admin😒.",
+                        show_alert = True
+                    )
+                else:   # If accepting, rejecting request tried to be done by either admin or owner
+                    if data == "reject":
+                        result = "REJECTED"
+                        groupResult = "has been Rejected💔."
+                        button = InlineKeyboardButton("Request Rejected🚫", "request again")
+                    elif data == "done":
+                        result = "COMPLETED"
+                        groupResult = "is Completed🥳."
+                        button = InlineKeyboardButton("Request Completed✅", "completed")
+                    elif data == "unavailable":
+                        result = "UNAVAILABLE"
+                        groupResult = "has been rejected💔 due to Unavailablity🥲."
+                        button = InlineKeyboardButton("Request Rejected🚫", "request again")
 
-                        msg = callback_query.message
-                        userid = 12345678
-                        for m in msg.entities:
-                            if m.type == "text_mention":
-                                userid = m.user.id
-                        originalMsg = msg.text
-                        findRegexStr = search(requestRegex, originalMsg)
-                        requestString = findRegexStr.group()
-                        contentRequested = originalMsg.split(requestString)[1]
-                        requestedBy = originalMsg.removeprefix("Request by ").split('\n\n')[0]
-                        mentionUser = f"<a href='tg://user?id={userid}'>{requestedBy}</a>"
-                        originalMsgMod = originalMsg.replace(requestedBy, mentionUser)
-                        originalMsgMod = f"<s>{originalMsgMod}</s>"
+                    msg = callback_query.message
+                    userid = 12345678
+                    for m in msg.entities:
+                        if m.type == "text_mention":
+                            userid = m.user.id
+                    originalMsg = msg.text
+                    findRegexStr = search(requestRegex, originalMsg)
+                    requestString = findRegexStr.group()
+                    contentRequested = originalMsg.split(requestString)[1]
+                    requestedBy = originalMsg.removeprefix("Request by ").split('\n\n')[0]
+                    mentionUser = f"<a href='tg://user?id={userid}'>{requestedBy}</a>"
+                    originalMsgMod = originalMsg.replace(requestedBy, mentionUser)
+                    originalMsgMod = f"<s>{originalMsgMod}</s>"
 
-                        newMsg = f"<b>{result}</b>\n\n{originalMsgMod}"
+                    newMsg = f"<b>{result}</b>\n\n{originalMsgMod}"
 
-                        # Editing reqeust message in channel
-                        await callback_query.edit_message_text(
-                            newMsg,
-                            parse_mode = "html",
-                            reply_markup = InlineKeyboardMarkup(
+                    # Editing reqeust message in channel
+                    await callback_query.edit_message_text(
+                        newMsg,
+                        parse_mode = "html",
+                        reply_markup = InlineKeyboardMarkup(
+                            [
                                 [
-                                    [
-                                        button
-                                    ]
+                                    button
                                 ]
-                            )
+                            ]
                         )
+                    )
 
-                        # Result of request sent to group
-                        replyText = f"<b>Dear {mentionUser}🧑\nYour request for {groupResult}\n<b>(Team Dramatic)</b></b>"
-                        await bot.send_message(
-                            int(groupID),
-                            replyText,
-                            parse_mode = "html",
-                            reply_markup = InlineKeyboardMarkup(
+                    # Result of request sent to group
+                    replyText = f"<b>Dear {mentionUser}🧑\nYour request for {groupResult}\n<b>(Team Dramatic)</b></b>"
+                    await bot.send_message(
+                        int(groupID),
+                        replyText,
+                        parse_mode="html",
+                        reply_markup=InlineKeyboardMarkup(
+                            [
                                 [
-                                    [
-                                        InlineKeyboardButton(
-                                            "📤UPLOAD CHANNEL📤",
-                                            url = f"https://t.me/+g5x2EHT6WVMxYjRk"
-                                        )
-                                    ]
+                                    InlineKeyboardButton(
+                                        "📤UPLOAD CHANNEL📤",
+                                        url="https://t.me/+g5x2EHT6WVMxYjRk",
+                                    )
                                 ]
-                            )
-                        )
-                    return
+                            ]
+                        ),
+                    )
+
+                return
     return
 
 
